@@ -1,15 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
-    <include
-        layout="@layout/v_profile"
-        android:visibility="gone" />
+    <data class = "ProfileBinding">
+        <import
+            alias="V"
+            type="android.view.View"/>
 
-    <include
-        layout="@layout/v_error"
-        android:visibility="gone" />
+        <variable
+            name="profileViewModel"
+            type="com.elegion.test.behancer.ui.profile.ProfileViewModel" />
+    </data>
 
-</LinearLayout>
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        bind:onRefresh="@{profileViewModel.getOnRefreshListener}"
+        bind:refreshState="@{profileViewModel.getIsLoading}">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/view_profile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:visibility="@{profileViewModel.isErrorVisible ? V.GONE : V.VISIBLE}">
+
+                <ImageView
+                    android:id="@+id/iv_profile"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:contentDescription="@string/content_description_details"
+                    bind:imageUrl="@{profileViewModel.imageUrl}"/>
+
+                <TextView
+                    android:id="@+id/tv_display_name_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/iv_profile"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_toEndOf="@id/iv_profile"
+                    android:layout_toRightOf="@id/iv_profile"
+                    android:textColor="@color/colorAccent"
+                    android:textStyle="bold"
+                    android:text="@{profileViewModel.displayName}"/>
+
+                <TextView
+                    android:id="@+id/tv_username_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/tv_display_name_details"
+                    android:layout_alignStart="@id/tv_display_name_details"
+                    android:layout_below="@id/tv_display_name_details" />
+
+                <TextView
+                    android:id="@+id/tv_created_on_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/tv_username_details"
+                    android:layout_alignStart="@id/tv_username_details"
+                    android:layout_below="@id/tv_username_details"
+                    android:text="@{profileViewModel.createdOn}"/>
+
+                <TextView
+                    android:id="@+id/tv_location_details"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@id/tv_created_on_details"
+                    android:layout_alignStart="@id/tv_created_on_details"
+                    android:layout_below="@id/tv_created_on_details"
+                    android:text="@{profileViewModel.location}"/>
+
+            </RelativeLayout>
+
+            <!--<include
+                layout="@layout/v_profile"
+                android:visibility="visible" />-->
+
+            <include
+                layout="@layout/v_error"
+                android:visibility="@{profileViewModel.isErrorVisible ? V.VISIBLE : V.GONE}" />
+        </LinearLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</layout>
